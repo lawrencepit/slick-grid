@@ -506,8 +506,7 @@ function SlickGrid($container,data,columns,options)
 	    BUFFER = numVisibleRows = Math.ceil(viewportH / ROW_HEIGHT);
 		CAPACITY = Math.max(CAPACITY, numVisibleRows + 2*BUFFER);
 
-		$divMain.height(Math.max(ROW_HEIGHT * (data.length + numVisibleRows - 2), viewportH - $.getScrollbarWidth()));
-		
+		$divMain.height(ROW_HEIGHT * data.length);
 				
 		var totalWidth = 0;
 		for (var i=0; i<columns.length; i++)
