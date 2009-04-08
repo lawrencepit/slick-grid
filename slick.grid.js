@@ -11,7 +11,6 @@
  * 	- consistent events (EventHelper?  jQuery events?)
  * 	- break resizeCanvas() into two functions to handle container resize and data size changes
  * 	- improve rendering speed by merging column extra cssClass into dynamically-generated .c{x} rules
- * 	- expose row height in the API
  * 	- improve rendering speed by reusing removed row nodes and doing one .replaceChild() instead of two .removeChild() and .appendChild()
  * 
  * KNOWN ISSUES:
@@ -76,7 +75,6 @@
 	function SlickGrid($container,data,columns,options)
 	{
 		// consts
-		var ROW_HEIGHT = 24;
 		var CAPACITY = 50;
 		var BUFFER = 5;  // will be set to equal one page
 	
@@ -348,7 +346,7 @@
 			var dataLoading = row < data.length && !d;
 			var css = "r" + (dataLoading ? " loading" : "") + (selectedRowsLookup[row] ? " selected" : "");
 		
-			stringArray.push("<div class='" + css + "' row='" + row + "' style='top:" + (ROW_HEIGHT*row) + "px'>");
+			stringArray.push("<div class='" + css + "' row='" + row + "' style='top:" + (options.row_height*row) + "px'>");
 		
 			for (var i=0, cols=columns.length; i<cols; i++) 
 			{
@@ -496,10 +494,10 @@
 			viewportW = $divMainScroller.innerWidth();
 			viewportH = $divMainScroller.innerHeight();
 
-		    BUFFER = numVisibleRows = Math.ceil(viewportH / ROW_HEIGHT);
+		    BUFFER = numVisibleRows = Math.ceil(viewportH / options.row_height);
 			CAPACITY = Math.max(CAPACITY, numVisibleRows + 2*BUFFER);
 
-			$divMain.height(ROW_HEIGHT * data.length);
+			$divMain.height(options.row_height * data.length);
 				
 			var totalWidth = 0;
 			for (var i=0; i<columns.length; i++)
@@ -533,8 +531,8 @@
 		function getViewport()
 		{
 			return {
-				top:	Math.floor(currentScrollTop / ROW_HEIGHT),
-				bottom:	Math.floor((currentScrollTop + viewportH) / ROW_HEIGHT)
+				top:	Math.floor(currentScrollTop / options.row_height),
+				bottom:	Math.floor((currentScrollTop + viewportH) / options.row_height)
 			};	
 		}
 	
@@ -576,7 +574,7 @@
 			var from = Math.max(0, vp.top - (scrollDir >= 0 ? 5 : BUFFER));
 			var to = Math.min(options.enableAddRow ? data.length : data.length - 1, vp.bottom + (scrollDir > 0 ? BUFFER : 5));
 
-			if (Math.abs(lastRenderedScrollTop - currentScrollTop) > ROW_HEIGHT*CAPACITY)
+			if (Math.abs(lastRenderedScrollTop - currentScrollTop) > options.row_height*CAPACITY)
 				removeAllRows();
 			else if (renderedRows >= CAPACITY)
 				cleanupRows(from,to);
@@ -597,7 +595,7 @@
 		
 			window.status = currentScrollLeft;
 		
-			if (scrollDistance < 5*ROW_HEIGHT) return;
+			if (scrollDistance < 5*options.row_height) return;
 		
 			if (lastRenderedScrollTop == currentScrollTop)
 				scrollDir = 0;
@@ -609,7 +607,7 @@
 			if (h_render)
 				window.clearTimeout(h_render);
 		
-			if (scrollDistance < 2*numVisibleRows*ROW_HEIGHT || avgRowRenderTime*CAPACITY < 30 ||  _forceSyncScrolling) 
+			if (scrollDistance < 2*numVisibleRows*options.row_height || avgRowRenderTime*CAPACITY < 30 ||  _forceSyncScrolling) 
 				render();
 			else
 				h_render = window.setTimeout(render, 50);
@@ -738,7 +736,7 @@
 		}
 
 		function getCellFromPoint(x,y) {
-			var row = Math.floor(y/ROW_HEIGHT);
+			var row = Math.floor(y/options.row_height);
 			var cell = 0;
 		
 			var w = 0;		
@@ -884,16 +882,16 @@
 			var scrollTop = $divMainScroller[0].scrollTop;
 		
 			// need to page down?
-			if ((currentRow + 2) * ROW_HEIGHT > scrollTop + viewportH) 
+			if ((currentRow + 2) * options.row_height > scrollTop + viewportH) 
 			{
-				$divMainScroller[0].scrollTop = (currentRow ) * ROW_HEIGHT;
+				$divMainScroller[0].scrollTop = (currentRow ) * options.row_height;
 			
 				handleScroll();
 			}
 			// or page up?
-			else if (currentRow * ROW_HEIGHT < scrollTop)
+			else if (currentRow * options.row_height < scrollTop)
 			{
-				$divMainScroller[0].scrollTop = (currentRow + 2) * ROW_HEIGHT - viewportH;
+				$divMainScroller[0].scrollTop = (currentRow + 2) * options.row_height - viewportH;
 			
 				handleScroll();			
 			}	
@@ -1117,6 +1115,7 @@
 
 	// Global defaults
 	$.fn.grid.defaults = {
+		row_height: 24,
 		enableAddRow: true,
 		manualScrolling: false,
 		editable: true,
