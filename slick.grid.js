@@ -140,7 +140,7 @@ function SlickGrid($container,data,columns,options)
 		
 		$divHeadersScroller = $("<div class='grid-header' style='overflow:hidden;position:relative;' />").appendTo($container);
 		$divHeaders = $("<div style='width:10000px' />").appendTo($divHeadersScroller);
-		$divMainScroller = $("<div tabIndex='0' hideFocus style='width:100%;overflow:scroll;outline:0;position:relative;outline:0px;'>").appendTo($container);
+		$divMainScroller = $("<div class='grid' tabIndex='0' hideFocus style='width:100%;overflow:auto;outline:0px;position:relative;'>").appendTo($container);
 		$divMain = $("<div class='grid-canvas' tabIndex='0' hideFocus />").appendTo($divMainScroller);
 		
 		$divMainScroller.height( $container.innerHeight() - $divHeadersScroller.outerHeight() );
