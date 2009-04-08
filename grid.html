@@ -315,7 +315,7 @@
 			if (grid) grid.destroy();
 			
 			
-			grid = new SlickGrid($("#myGrid"), data, model, {});
+			grid = $("#myGrid").grid(data, model, {});
 			
 			grid.onValidationError = function(elem, validationResults, row, cell, cellInfo) {
 				console.warn(validationResults.msg);

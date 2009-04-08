@@ -26,6 +26,10 @@ li {
     margin: 0px;
 } 
 
+.ui-datepicker {
+  z-index: 15;
+}
+
 #myGrid {
     background: white;
     outline: 0px;

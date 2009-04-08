@@ -125,7 +125,7 @@
 			
 			
 			// initialize the grid
-			grid = new SlickGrid($("#myGrid"), dataView.rows, columns, options);
+			grid = $("#myGrid").grid(dataView.rows, columns, options);
 			
 			// wire up model events to drive the grid
 			dataView.onRowCountChanged.subscribe(function(args) {
