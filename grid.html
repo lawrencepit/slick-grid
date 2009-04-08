@@ -315,7 +315,7 @@
 			if (grid) grid.destroy();
 			
 			
-			grid = $("#myGrid").grid(data, model, {});
+			grid = $("#myGrid").grid({columns:model, rows:data});
 			
 			grid.onValidationError = function(elem, validationResults, row, cell, cellInfo) {
 				console.warn(validationResults.msg);

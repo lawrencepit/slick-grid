@@ -57,10 +57,6 @@
 					
 			
 			
-		var grid;
-		
-		var data = [];
-
 		var columns = [
 			{id:"title", name:"Title", field:"title", width:120, cssClass:"cell-title", editor:TextCellEditor, validator:requiredFieldValidator},
 			{id:"duration", name:"Duration", field:"duration", editor:TextCellEditor},
@@ -70,30 +66,32 @@
 			{id:"effort-driven", name:"Effort Driven", width:80, minWidth:20, maxWidth:80, cssClass:"cell-effort-driven", field:"effortDriven", formatter:BoolCellFormatter, editor:YesNoCheckboxCellEditor}
 		];
 
+		var data = [];
+		for (var i=0; i<500; i++) {
+			var d = (data[i] = {});
+
+			d["title"] = "Task " + i;
+			d["duration"] = "5 days";
+			d["percentComplete"] = Math.round(Math.random() * 100);
+			d["start"] = "01/01/2009";
+			d["finish"] = "01/05/2009";
+			d["effortDriven"] = (i % 5 == 0);
+		}
+
 		var options = {
 			editable: true,
 			enableAddRow: false,
 			enableCellNavigation: true,
-			asyncEditorLoading: false
+			asyncEditorLoading: false,
+			columns: columns,
+			rows: data
 		};	
 
 
 
-		$(function()
-		{
-			for (var i=0; i<500; i++) {
-				var d = (data[i] = {});
-
-				d["title"] = "Task " + i;
-				d["duration"] = "5 days";
-				d["percentComplete"] = Math.round(Math.random() * 100);
-				d["start"] = "01/01/2009";
-				d["finish"] = "01/05/2009";
-				d["effortDriven"] = (i % 5 == 0);
-			}
-
-			$("#myGrid").grid(data, columns, options);
-		})
+		$(function() {
+			$("#myGrid").grid(options);
+		});
 		
 		</script>
 

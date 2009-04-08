@@ -126,7 +126,8 @@
 			editable: true,
 			enableAddRow: true,
 			enableCellNavigation: true,
-			asyncEditorLoading: false
+			asyncEditorLoading: false,
+			columns: columns
 		};	
 
 
@@ -217,9 +218,10 @@
 			dataView.setFilter(myFilter);
 			dataView.endUpdate();
 			
+			options.rows = dataView.rows;
 			
 			// initialize the grid
-			grid = $("#myGrid").grid(dataView.rows, columns, options);
+			grid = $("#myGrid").grid(options);
 			
 			grid.onAddNewRow = addItem;
 					

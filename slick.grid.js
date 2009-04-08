@@ -72,8 +72,13 @@
 
 	// Private
 
-	function SlickGrid($container,data,columns,options)
+	function SlickGrid(widget)
 	{
+		var $container = widget.element;
+		var data = widget.options.rows;
+		var columns = widget.options.columns;
+		var options = widget.options;
+		
 		// consts
 		var CAPACITY = 50;
 		var BUFFER = 5;  // will be set to equal one page
@@ -119,8 +124,6 @@
 	
 	
 		function init() {
-			options = $.extend({},$.fn.grid.defaults,options);
-
 			$container
 				.empty()
 				.attr("tabIndex",0)
@@ -732,7 +735,7 @@
 			if (currentCellNode == $cell[0] && currentEditor != null) return;
 				
 			if (options.editOnDoubleClick)
-				makeSelectedCellEditable();
+				editCurrentCell();
 		}
 
 		function getCellFromPoint(x,y) {
@@ -778,9 +781,9 @@
 					window.clearTimeout(h_editorLoader);
 				
 					if (async) 
-						h_editorLoader = window.setTimeout(makeSelectedCellEditable, 100);
+						h_editorLoader = window.setTimeout(editCurrentCell, 100);
 					else 
-						makeSelectedCellEditable();
+						editCurrentCell();
 				}
 			}
 			else
@@ -848,12 +851,12 @@
 			GlobalEditorLock.leaveEditMode(self);		
 		}
 
-		function makeSelectedCellEditable()
+		function editCurrentCell()
 		{
 			if (!currentCellNode) return;
 		
 			if (!options.editable)
-				throw "Grid : makeSelectedCellEditable : should never get called when options.editable is false";
+				throw "Grid : editCurrentCell : should never get called when options.editable is false";
 		
 			// cancel pending async call if there is one
 			window.clearTimeout(h_editorLoader);
@@ -1060,8 +1063,8 @@
 			self[fn].call(this,args);
 		
 			alert("Grid : benchmarkFn : " + fn + " : " + (new Date() - s) + "ms");		
-		};	
-	
+		};
+
 
 
 
@@ -1096,7 +1099,7 @@
 			"scroll":			scroll,  // TODO
 			"getCellFromPoint":	getCellFromPoint,
 			"gotoCell":			gotoCell,
-			"editCurrentCell":	makeSelectedCellEditable,
+			"editCurrentCell":	editCurrentCell,
 			"getSelectedRows":	getSelectedRows,
 			"setSelectedRows":	setSelectedRows,
 			"setColumnHeaderCssClass":	setColumnHeaderCssClass,
@@ -1104,26 +1107,74 @@
 			// IEditor implementation
 			"commitCurrentEdit":	commitCurrentEdit,
 			"cancelCurrentEdit":	cancelCurrentEdit
-		});	
-	}
+		});
+	};
+
+
+	//////////////////////////////////////////////////////////////////////////////////////////////
+	// jQuery UI Widget
+
+	var SlickGridWidget = {
+		_grid: null,
+
+		_init: function() {
+			_grid = new SlickGrid(this);
+		},
+
+		// Events: TODO !!
+		onColumnHeaderClick: null,
+		onClick: null,
+		onKeyDown: null,
+		onAddNewRow: null,
+		onValidationError: null,
+		onViewportChanged: null,
+		onSelectedRowsChanged: null,
+		onColumnsReordered: null,
+
+		// Methods
+		destroy: function() { _grid.destroy() },
+		getColumnIndex: function() { return _grid.getColumnIndex(); },
+		updateCell: function(row, cell) { _grid.updateCell(row, cell); },
+		updateRow: function(row) { _grid.updateRow(row); },
+		removeRow: function(row) { _grid.removeRow(row); },
+		removeRows: function(rows) { _grid.removeRows(rows); },
+		removeAllRows: function(rows) { _grid.removeAllRows(); },
+		render: function() { _grid.render(); },
+		getViewport: function() { return _grid.getViewport(); },
+		resizeCanvas: function() { _grid.resizeCanvas(); },
+		//scroll: _grid.scroll,  // TODO
+		getCellFromPoint: function(x, y) { return _grid.getCellFromPoint(x, y); },
+		gotoCell: function(row, cell) { _grid.gotoCell(row, cell); },
+		editCurrentCell: function() { _grid.editCurrentCell(); },
+		getSelectedRows: function() { return _grid.getSelectedRows(); },
+		setSelectedRows: function(rows) { _grid.setSelectedRows(rows); },
+		setColumnHeaderCssClass: function(id,classesToAdd,classesToRemove) {
+			_grid.setColumnHeaderCssClass(id,classesToAdd,classesToRemove);
+		},
+	
+		// IEditor implementation
+		commitCurrentEdit: function() { _grid.commitCurrentEdit(); },
+		cancelCurrentEdit: function() { _grid.cancelCurrentEdit(); }
+	};
 
 	// Plugin definition
-	$.fn.grid = function(data, columns, options) {
-		if (!this || !this[0]) return null;
-		return new SlickGrid($(this[0]), data, columns, options);
-	};
+	$.widget("ui.grid", SlickGridWidget);
 
-	// Global defaults
-	$.fn.grid.defaults = {
-		row_height: 24,
-		enableAddRow: true,
-		manualScrolling: false,
-		editable: true,
-		editOnDoubleClick: false,
-		enableCellNavigation: true,
-		defaultColumnWidth: 80,
-		enableColumnReorder: true,
-		asyncEditorLoading: true
-	};
+	$.extend($.ui.grid, {
+		version: "0.9",
+		eventPrefix: "grid",
+		getter: ["getColumnIndex", "getViewport", "getCellFromPoint", "getSelectedRows"],
+		defaults: {
+			row_height: 24,
+			enableAddRow: true,
+			manualScrolling: false,
+			editable: true,
+			editOnDoubleClick: false,
+			enableCellNavigation: true,
+			defaultColumnWidth: 80,
+			enableColumnReorder: true,
+			asyncEditorLoading: true
+		}
+	});
 
 })(jQuery);
