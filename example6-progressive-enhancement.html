@@ -1,0 +1,99 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+		<title>SlickGrid example</title>
+		<link rel="stylesheet" href="slick.grid.css" type="text/css" media="screen" charset="utf-8" />
+		<link rel="stylesheet" href="themes/smoothness/ui.all.css" type="text/css" media="screen" charset="utf-8" />
+		<link rel="stylesheet" href="examples.css" type="text/css" media="screen" charset="utf-8" />
+		<style>
+		</style>
+	</head>
+	<body>
+		<script language="JavaScript" src="lib/firebugx.js"></script>
+		<script language="JavaScript" src="lib/jquery-1.3.2.min.js"></script>
+		<script language="JavaScript" src="lib/jquery-ui-1.7.custom.min.js"></script>
+		<script language="JavaScript" src="lib/jquery.getScrollbarWidth.js"></script>
+		<script language="JavaScript" src="lib/jquery.rule-1.0.1-min.js"></script>
+			
+		<script language="JavaScript" src="slick.editors.js"></script>
+		<script language="JavaScript" src="slick.grid.js"></script>
+		<script language="JavaScript" src="slick.globaleditorlock.js"></script>
+
+		<table width="100%">
+		<tr>
+			<td valign="top" width="50%">
+
+			<div id='myTable-container' style="overflow: auto; width: 100%; height: 476px;">
+				<table id='myTable'>
+					<thead>
+						<tr class='grid-header'>
+							<th>Title</th>
+							<th>Duration</th>
+							<th>% Complete</th>
+							<th>Start</th>
+							<th>Finish</th>
+							<th>Effort Driven</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr><td>Task 0</td><td>5 days</td><td>8</td><td>01/01/2009</td><td>01/05/2009</td><td>true</td></tr><tr><td>Task 1</td><td>5 days</td><td>43</td><td>01/01/2009</td><td>01/05/2009</td><td>false</td></tr><tr><td>Task 2</td><td>5 days</td><td>15</td><td>01/01/2009</td><td>01/05/2009</td><td>false</td></tr><tr><td>Task 3</td><td>5 days</td><td>45</td><td>01/01/2009</td><td>01/05/2009</td><td>false</td></tr><tr><td>Task 4</td><td>5 days</td><td>92</td><td>01/01/2009</td><td>01/05/2009</td><td>false</td></tr><tr><td>Task 5</td><td>5 days</td><td>29</td><td>01/01/2009</td><td>01/05/2009</td><td>true</td></tr><tr><td>Task 6</td><td>5 days</td><td>31</td><td>01/01/2009</td><td>01/05/2009</td><td>false</td></tr><tr><td>Task 7</td><td>5 days</td><td>25</td><td>01/01/2009</td><td>01/05/2009</td><td>false</td></tr><tr><td>Task 8</td><td>5 days</td><td>5</td><td>01/01/2009</td><td>01/05/2009</td><td>false</td></tr><tr><td>Task 9</td><td>5 days</td><td>99</td><td>01/01/2009</td><td>01/05/2009</td><td>false</td></tr><tr><td>Task 10</td><td>5 days</td><td>70</td><td>01/01/2009</td><td>01/05/2009</td><td>true</td></tr><tr><td>Task 11</td><td>5 days</td><td>47</td><td>01/01/2009</td><td>01/05/2009</td><td>false</td></tr><tr><td>Task 12</td><td>5 days</td><td>20</td><td>01/01/2009</td><td>01/05/2009</td><td>false</td></tr><tr><td>Task 13</td><td>5 days</td><td>73</td><td>01/01/2009</td><td>01/05/2009</td><td>false</td></tr><tr><td>Task 14</td><td>5 days</td><td>25</td><td>01/01/2009</td><td>01/05/2009</td><td>false</td></tr><tr><td>Task 15</td><td>5 days</td><td>11</td><td>01/01/2009</td><td>01/05/2009</td><td>true</td></tr><tr><td>Task 16</td><td>5 days</td><td>91</td><td>01/01/2009</td><td>01/05/2009</td><td>false</td></tr><tr><td>Task 17</td><td>5 days</td><td>45</td><td>01/01/2009</td><td>01/05/2009</td><td>false</td></tr><tr><td>Task 18</td><td>5 days</td><td>96</td><td>01/01/2009</td><td>01/05/2009</td><td>false</td></tr><tr><td>Task 19</td><td>5 days</td><td>92</td><td>01/01/2009</td><td>01/05/2009</td><td>false</td></tr><tr><td>Task 20</td><td>5 days</td><td>67</td><td>01/01/2009</td><td>01/05/2009</td><td>true</td></tr><tr><td>Task 21</td><td>5 days</td><td>57</td><td>01/01/2009</td><td>01/05/2009</td><td>false</td></tr><tr><td>Task 22</td><td>5 days</td><td>42</td><td>01/01/2009</td><td>01/05/2009</td><td>false</td></tr><tr><td>Task 23</td><td>5 days</td><td>83</td><td>01/01/2009</td><td>01/05/2009</td><td>false</td></tr><tr><td>Task 24</td><td>5 days</td><td>36</td><td>01/01/2009</td><td>01/05/2009</td><td>false</td></tr><tr><td>Task 25</td><td>5 days</td><td>57</td><td>01/01/2009</td><td>01/05/2009</td><td>true</td></tr><tr><td>Task 26</td><td>5 days</td><td>96</td><td>01/01/2009</td><td>01/05/2009</td><td>false</td></tr><tr><td>Task 27</td><td>5 days</td><td>45</td><td>01/01/2009</td><td>01/05/2009</td><td>false</td></tr><tr><td>Task 28</td><td>5 days</td><td>78</td><td>01/01/2009</td><td>01/05/2009</td><td>false</td></tr><tr><td>Task 29</td><td>5 days</td><td>61</td><td>01/01/2009</td><td>01/05/2009</td><td>false</td></tr><tr><td>Task 30</td><td>5 days</td><td>38</td><td>01/01/2009</td><td>01/05/2009</td><td>true</td></tr><tr><td>Task 31</td><td>5 days</td><td>41</td><td>01/01/2009</td><td>01/05/2009</td><td>false</td></tr><tr><td>Task 32</td><td>5 days</td><td>29</td><td>01/01/2009</td><td>01/05/2009</td><td>false</td></tr><tr><td>Task 33</td><td>5 days</td><td>71</td><td>01/01/2009</td><td>01/05/2009</td><td>false</td></tr><tr><td>Task 34</td><td>5 days</td><td>51</td><td>01/01/2009</td><td>01/05/2009</td><td>false</td></tr><tr><td>Task 35</td><td>5 days</td><td>85</td><td>01/01/2009</td><td>01/05/2009</td><td>true</td></tr><tr><td>Task 36</td><td>5 days</td><td>21</td><td>01/01/2009</td><td>01/05/2009</td><td>false</td></tr><tr><td>Task 37</td><td>5 days</td><td>41</td><td>01/01/2009</td><td>01/05/2009</td><td>false</td></tr><tr><td>Task 38</td><td>5 days</td><td>93</td><td>01/01/2009</td><td>01/05/2009</td><td>false</td></tr><tr><td>Task 39</td><td>5 days</td><td>28</td><td>01/01/2009</td><td>01/05/2009</td><td>false</td></tr><tr><td>Task 40</td><td>5 days</td><td>57</td><td>01/01/2009</td><td>01/05/2009</td><td>true</td></tr><tr><td>Task 41</td><td>5 days</td><td>96</td><td>01/01/2009</td><td>01/05/2009</td><td>false</td></tr><tr><td>Task 42</td><td>5 days</td><td>24</td><td>01/01/2009</td><td>01/05/2009</td><td>false</td></tr><tr><td>Task 43</td><td>5 days</td><td>79</td><td>01/01/2009</td><td>01/05/2009</td><td>false</td></tr><tr><td>Task 44</td><td>5 days</td><td>1</td><td>01/01/2009</td><td>01/05/2009</td><td>false</td></tr><tr><td>Task 45</td><td>5 days</td><td>76</td><td>01/01/2009</td><td>01/05/2009</td><td>true</td></tr><tr><td>Task 46</td><td>5 days</td><td>79</td><td>01/01/2009</td><td>01/05/2009</td><td>false</td></tr><tr><td>Task 47</td><td>5 days</td><td>8</td><td>01/01/2009</td><td>01/05/2009</td><td>false</td></tr><tr><td>Task 48</td><td>5 days</td><td>81</td><td>01/01/2009</td><td>01/05/2009</td><td>false</td></tr><tr><td>Task 49</td><td>5 days</td><td>6</td><td>01/01/2009</td><td>01/05/2009</td><td>false</td></tr><tr><td>Task 50</td><td>5 days</td><td>38</td><td>01/01/2009</td><td>01/05/2009</td><td>true</td></tr>
+					</tbody>
+				</table>
+			</div>
+
+				<div id="myGrid" style="width:600px;height:500px;display:none;">
+				</div>
+
+			</td>
+			<td valign="top">
+				<h2>Demonstrates:</h2>
+		
+				<ul>
+					<li>Progressive enhancement of an HTML table (try with and without javascript enabled)</li>
+				</ul>		
+			</td>
+		</tr>
+		</table>
+
+
+		<script>
+
+		var columns = [
+			{id:"title", name:"Title", field:"title"},
+			{id:"duration", name:"Duration", field:"duration"},
+			{id:"%", name:"% Complete", field:"percentComplete"},
+			{id:"start", name:"Start", field:"start"},
+			{id:"finish", name:"Finish", field:"finish"},
+			{id:"effort-driven", name:"Effort Driven", field:"effortDriven"}
+		];
+
+		$(function() {
+			var data = [];
+			$('#myTable > tbody > tr').each(function(i, $tr) {
+				data[i] = {
+				  title:           $("td:eq(0)", $tr).html(),
+				  duration:        $("td:eq(1)", $tr).html(),
+				  percentComplete: $("td:eq(2)", $tr).html(),
+				  start:           $("td:eq(3)", $tr).html(),
+				  finish:          $("td:eq(4)", $tr).html(),
+				  effortDriven:    $("td:eq(5)", $tr).html()
+				};
+			});
+		
+		  var options = {
+				editable: false,
+				enableAddRow: false,
+				enableCellNavigation: false,
+				columns: columns,
+				rows: data
+			};
+			
+			$('#myTable-container').hide();
+			$("#myGrid").show().grid(options);
+		});
+		
+		</script>
+		
+	</body>
+</html>
