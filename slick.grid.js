@@ -210,7 +210,7 @@
 						createCssRules();
 						render();
 					
-						if ($.isFunction(options.onColumnsReordered))
+						if (options.onColumnsReordered)
 							options.onColumnsReordered();
 						
 						e.stopPropagation();
@@ -225,7 +225,7 @@
 			
 				var id = $(e.target).attr("id");
 			
-				if ($.isFunction(options.onColumnHeaderClick))
+				if (options.onColumnHeaderClick)
 					options.onColumnHeaderClick(columns[columnsById[id]]);
 			});	
 		
@@ -609,7 +609,7 @@
 			else
 				h_render = window.setTimeout(render, 50);
 			
-			if ($.isFunction(options.onViewportChanged))
+			if (options.onViewportChanged)
 				options.onViewportChanged();
 		}
 
@@ -656,7 +656,7 @@
 				default:
 
 					// do we have any registered handlers?
-					if ($.isFunction(options.onKeyDown) && data[currentRow])
+					if (options.onKeyDown && data[currentRow])
 					{
 						// grid must not be in edit mode
 						if (!currentEditor) 
@@ -695,7 +695,7 @@
 			var validated = null;
 	
 			// do we have any registered handlers?
-			if (data[row] && $.isFunction(options.onClick))
+			if (data[row] && options.onClick)
 			{
 				// grid must not be in edit mode
 				if (!currentEditor || (validated = commitCurrentEdit())) 
@@ -795,7 +795,7 @@
 			else
 				setSelectedRows([]);
 			
-			if ($.isFunction(options.onSelectedRowsChanged))
+			if (options.onSelectedRowsChanged)
 				options.onSelectedRowsChanged();			
 		}
 	
@@ -977,7 +977,7 @@
 								makeSelectedCellNormal();
 							}
 						}
-						else if ($.isFunction(options.onAddNewRow)) {
+						else if (options.onAddNewRow) {
 								makeSelectedCellNormal();
 								options.onAddNewRow(columns[currentCell], value);
 							}
@@ -989,7 +989,7 @@
 						$(currentCellNode).addClass("invalid");
 						$(currentCellNode).stop(true,true).effect("highlight", {color:"red"}, 300);
 					
-						if ($.isFunction(options.onValidationError))
+						if (options.onValidationError)
 							options.onValidationError(currentCellNode, validationResults, currentRow, currentCell, columns[currentCell]);
 					
 						currentEditor.focus();
