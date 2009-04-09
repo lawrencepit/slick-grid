@@ -1105,8 +1105,12 @@
 			_grid = new SlickGrid(this.element, this.options.rows, this.options.columns, this.options);
 		},
 
+		destroy: function() { 
+			_grid.destroy();
+			_grid = null;
+		},
+
 		// Methods
-		destroy: function() { _grid.destroy() },
 		getColumnIndex: function() { return _grid.getColumnIndex(); },
 		updateCell: function(row, cell) { _grid.updateCell(row, cell); },
 		updateRow: function(row) { _grid.updateRow(row); },
