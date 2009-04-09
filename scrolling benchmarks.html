@@ -42,9 +42,13 @@
 		<script>
 
 		var dataView;
-		var grid;
-		
-		var data = [];
+		var $grid;
+    var $grid_container;
+    var lastScrollTop = 0;
+    var startTime;
+    var scrollAmount = 1000;
+		var percentCompleteThreshold = 0;
+		var searchString = "";
 
 		var columns = [
 			{id:"title", name:"Title", field:"title", width:120, cssClass:"cell-title", editor:TextCellEditor, setValueHandler:updateItem},
@@ -55,16 +59,35 @@
 			{id:"effort-driven", name:"Effort Driven", width:80, minWidth:20, maxWidth:80, cssClass:"cell-effort-driven", field:"effortDriven", formatter:BoolCellFormatter, editor:YesNoCheckboxCellEditor, setValueHandler:updateItem, cannotTriggerInsert:true}
 		];
 
+		// prepare the data
+		var data = [];
+		for (var i=0; i<5000; i++) {
+			var d = (data[i] = {});
+			
+			d["id"] = "id_" + i;
+			d["title"] = "Task " + i;
+			d["duration"] = "5 days";
+			d["percentComplete"] = Math.round(Math.random() * 100);
+			d["start"] = "01/01/2009";
+			d["finish"] = "01/05/2009";
+			d["effortDriven"] = (i % 5 == 0);
+		}
+
+		// initialize the model
+		dataView = new DataView();
+		dataView.beginUpdate();
+		dataView.setItems(data);
+		dataView.setFilter(myFilter);
+		dataView.endUpdate();
+
 		var options = {
 			editable: true,
 			enableAddRow: true,
 			enableCellNavigation: true,
-			asyncEditorLoading: true
-		};	
-
-
-		var percentCompleteThreshold = 0;
-		var searchString = "";
+			asyncEditorLoading: true,
+			columns: columns,
+			rows: dataView.rows
+		};
 
 		function myFilter(item) {
 			if (item["percentComplete"] < percentCompleteThreshold) 
@@ -102,60 +125,29 @@
 
 		$(function()
 		{
-			// prepare the data
-			for (var i=0; i<5000; i++) {
-				var d = (data[i] = {});
-				
-				d["id"] = "id_" + i;
-				d["title"] = "Task " + i;
-				d["duration"] = "5 days";
-				d["percentComplete"] = Math.round(Math.random() * 100);
-				d["start"] = "01/01/2009";
-				d["finish"] = "01/05/2009";
-				d["effortDriven"] = (i % 5 == 0);
-			}
-			
-
-			// initialize the model
-			dataView = new DataView();
-			dataView.beginUpdate();
-			dataView.setItems(data);
-			dataView.setFilter(myFilter);
-			dataView.endUpdate();
-			
-			
 			// initialize the grid
-			grid = $("#myGrid").grid(dataView.rows, columns, options);
+			$grid = $("#myGrid").grid(options);
+			$grid_container = $(".grid-container", $grid);
 			
 			// wire up model events to drive the grid
 			dataView.onRowCountChanged.subscribe(function(args) {
-				grid.resizeCanvas();
+				$grid.grid('resizeCanvas');
 			});
 			
 			dataView.onRowsChanged.subscribe(function(rows) {
 				for (var i=0, rl=rows.length; i<rl; i++) {
-					grid.removeRow(rows[i]);
+					$grid.grid('removeRow', rows[i]);
 				}
 				
-				grid.render();
+				$grid.grid('render');
 			});
-			
-			$grid = $("#myGrid div.grid-canvas").parent();
-		})
-		
-		
-		
-		
-		
-        var $grid;
-        var lastScrollTop = 0;
-        var startTime;
-        var scrollAmount = 1000;
+		});
+
         
 		function startBench(scroll) {
 			scrollAmount = scroll;
 			lastScrollTop = 0;
-			$grid.scrollTop(0);	
+			$grid_container.scrollTop(0);	
 			
 			window.setTimeout(function(){
 				startTime = new Date();
@@ -164,10 +156,10 @@
 		}
 		
         function bench(){
-            $grid.scrollTop(lastScrollTop + scrollAmount);
+            $grid_container.scrollTop(lastScrollTop + scrollAmount);
             
-            if ($grid.scrollTop() == lastScrollTop + scrollAmount) {
-                lastScrollTop = $grid.scrollTop();
+            if ($grid_container.scrollTop() == lastScrollTop + scrollAmount) {
+                lastScrollTop = $grid_container.scrollTop();
                 window.setTimeout(bench, 10);
             }
             else {

@@ -93,7 +93,7 @@
 					
 			
 		var dataView;
-		var grid;
+		var $grid;
 		
 		var columns = [
 			{id:"title", name:"Title", field:"title", width:120, cssClass:"cell-title", editor:TextCellEditor, validator:requiredFieldValidator, setValueHandler:updateItem},
@@ -106,7 +106,7 @@
 
 		// prepare the data
 		var data = [];
-		for (var i=0; i<10000; i++) {
+		for (var i=0; i<10; i++) {
 			var d = (data[i] = {});
 			
 			d["id"] = "id_" + i;
@@ -174,41 +174,38 @@
 			dataView.endUpdate();
 			
 			options.rows = dataView.rows;
-			
-			// initialize the grid
-			grid = $("#myGrid").grid(options);
-			
-			grid.onAddNewRow = addItem;
-			
-			grid.onColumnHeaderClick = function(columnDef) {
+			options.onAddNewRow = addItem;
+
+			options.onColumnHeaderClick = function(columnDef) {
 				if (GlobalEditorLock.isEditing() && !GlobalEditorLock.commitCurrentEdit())
 					return;
 				
 				for (var i=0; i<columns.length; i++)
-					grid.setColumnHeaderCssClass(columns[i].id, "", "sort-asc sort-desc");
+					$grid.grid('setColumnHeaderCssClass', columns[i].id, "", "sort-asc sort-desc");
 				
 				if (sortcol == columnDef.field)
 					sortdir *= -1;
 				else
 					sortdir = 1;
 				
-				grid.setColumnHeaderCssClass(columnDef.id, sortdir == 1 ? "sort-asc" : "sort-desc", "");
+				$grid.grid('setColumnHeaderCssClass', columnDef.id, sortdir == 1 ? "sort-asc" : "sort-desc", "");
 				
 				sortcol = columnDef.field;
 				dataView.sort(comparer);
 			}
 			
-			
 			// wire up model events to drive the grid
 			dataView.onRowCountChanged.subscribe(function(args) {
-				grid.resizeCanvas();
+				$grid.grid('resizeCanvas');
 			});
 			
 			dataView.onRowsChanged.subscribe(function(rows) {
-				grid.removeRows(rows);
-				grid.render();
+				$grid.grid('removeRows', rows);
+				$grid.grid('render');
 			});
 			
+			// initialize the grid
+			$grid = $("#myGrid").grid(options);
 			
 			// wire up the slider to apply the filter to the model
 			$("#pcSlider").slider({
@@ -242,7 +239,8 @@
 									
 				dataView.sort(percentCompleteSort);
 			});
-		})
+			
+		});
 		
 		</script>
 

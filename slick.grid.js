@@ -72,13 +72,8 @@
 
 	// Private
 
-	function SlickGrid(widget)
+	function SlickGrid($container, data, columns, options)
 	{
-		var $container = widget.element;
-		var data = widget.options.rows;
-		var columns = widget.options.columns;
-		var options = widget.options;
-		
 		// consts
 		var CAPACITY = 50;
 		var BUFFER = 5;  // will be set to equal one page
@@ -134,7 +129,7 @@
 		
 			$divHeadersScroller = $("<div class='grid-header' style='overflow:hidden;position:relative;' />").appendTo($container);
 			$divHeaders = $("<div style='width:10000px' />").appendTo($divHeadersScroller);
-			$divMainScroller = $("<div class='grid' tabIndex='0' hideFocus style='width:100%;overflow:auto;outline:0px;position:relative;'>").appendTo($container);
+			$divMainScroller = $("<div class='grid-container' tabIndex='0' hideFocus style='width:100%;overflow:auto;outline:0px;position:relative;'>").appendTo($container);
 			$divMain = $("<div class='grid-canvas' tabIndex='0' hideFocus />").appendTo($divMainScroller);
 		
 			$divMainScroller.height( $container.innerHeight() - $divHeadersScroller.outerHeight() );
@@ -215,8 +210,8 @@
 						createCssRules();
 						render();
 					
-						if (self.onColumnsReordered)
-							self.onColumnsReordered();
+						if ($.isFunction(options.onColumnsReordered))
+							options.onColumnsReordered();
 						
 						e.stopPropagation();
 						
@@ -230,8 +225,8 @@
 			
 				var id = $(e.target).attr("id");
 			
-				if (self.onColumnHeaderClick)
-					self.onColumnHeaderClick(columns[columnsById[id]]);
+				if ($.isFunction(options.onColumnHeaderClick))
+					options.onColumnHeaderClick(columns[columnsById[id]]);
 			});	
 		
 		
@@ -497,19 +492,19 @@
 			viewportW = $divMainScroller.innerWidth();
 			viewportH = $divMainScroller.innerHeight();
 
-		    BUFFER = numVisibleRows = Math.ceil(viewportH / options.row_height);
+			BUFFER = numVisibleRows = Math.ceil(viewportH / options.row_height);
 			CAPACITY = Math.max(CAPACITY, numVisibleRows + 2*BUFFER);
 
 			$divMain.height(options.row_height * data.length);
-				
+
 			var totalWidth = 0;
 			for (var i=0; i<columns.length; i++)
 			{
 				totalWidth += (columns[i].width + 5);
 			}
 			$divMain.width(totalWidth);
-	  
-		  	// remove the rows that are now outside of the data range
+
+			// remove the rows that are now outside of the data range
 			// this helps avoid redundant calls to .removeRow() when the size of the data decreased by thousands of rows
 			var parentNode = $divMain[0];
 			var l = options.enableAddRow ? data.length : data.length - 1;
@@ -524,11 +519,10 @@
 					counter_rows_removed++;
 				}
 			}
-		
-	  
-	        // browsers sometimes do not adjust scrollTop/scrollHeight when the height of contained objects changes
-		    if ($divMainScroller.scrollTop() > $divMain.height() - $divMainScroller.height())
-		        $divMainScroller.scrollTop($divMain.height() - $divMainScroller.height());
+
+			// browsers sometimes do not adjust scrollTop/scrollHeight when the height of contained objects changes
+			if ($divMainScroller.scrollTop() > $divMain.height() - $divMainScroller.height())
+				$divMainScroller.scrollTop($divMain.height() - $divMainScroller.height());
 		}
 	
 		function getViewport()
@@ -582,8 +576,8 @@
 			else if (renderedRows >= CAPACITY)
 				cleanupRows(from,to);
 
-			renderRows(from,to);		
-		
+			renderRows(from,to);
+
 			lastRenderedScrollTop = currentScrollTop;
 			h_render = null;
 		}
@@ -615,8 +609,8 @@
 			else
 				h_render = window.setTimeout(render, 50);
 			
-			if (self.onViewportChanged)
-				self.onViewportChanged();
+			if ($.isFunction(options.onViewportChanged))
+				options.onViewportChanged();
 		}
 
 
@@ -662,13 +656,13 @@
 				default:
 
 					// do we have any registered handlers?
-					if (self.onKeyDown && data[currentRow])
+					if ($.isFunction(options.onKeyDown) && data[currentRow])
 					{
 						// grid must not be in edit mode
 						if (!currentEditor) 
 						{
 							// handler will return true if the event was handled
-							if (self.onKeyDown(e, currentRow, currentCell)) 
+							if (options.onKeyDown(e, currentRow, currentCell)) 
 							{
 								e.stopPropagation();
 								e.preventDefault();
@@ -701,13 +695,13 @@
 			var validated = null;
 	
 			// do we have any registered handlers?
-			if (data[row] && self.onClick)
+			if (data[row] && $.isFunction(options.onClick))
 			{
 				// grid must not be in edit mode
 				if (!currentEditor || (validated = commitCurrentEdit())) 
 				{
 					// handler will return true if the event was handled
-					if (self.onClick(e, row, cell)) 
+					if (options.onClick(e, row, cell)) 
 					{
 						e.stopPropagation();
 						e.preventDefault();
@@ -801,8 +795,8 @@
 			else
 				setSelectedRows([]);
 			
-			if (self.onSelectedRowsChanged)
-				self.onSelectedRowsChanged();			
+			if ($.isFunction(options.onSelectedRowsChanged))
+				options.onSelectedRowsChanged();			
 		}
 	
 		function clearTextSelection()
@@ -983,9 +977,9 @@
 								makeSelectedCellNormal();
 							}
 						}
-						else if (self.onAddNewRow) {
+						else if ($.isFunction(options.onAddNewRow)) {
 								makeSelectedCellNormal();
-								self.onAddNewRow(columns[currentCell], value);
+								options.onAddNewRow(columns[currentCell], value);
 							}
 					
 						return true;
@@ -995,8 +989,8 @@
 						$(currentCellNode).addClass("invalid");
 						$(currentCellNode).stop(true,true).effect("highlight", {color:"red"}, 300);
 					
-						if (self.onValidationError)
-							self.onValidationError(currentCellNode, validationResults, currentRow, currentCell, columns[currentCell]);
+						if ($.isFunction(options.onValidationError))
+							options.onValidationError(currentCellNode, validationResults, currentRow, currentCell, columns[currentCell]);
 					
 						currentEditor.focus();
 						return false;
@@ -1075,17 +1069,7 @@
 		// Public API
 
 		$.extend(this, {
-			// Events
-			"onColumnHeaderClick":	null,
-			"onClick":			null,
-			"onKeyDown":		null,
-			"onAddNewRow":		null,
-			"onValidationError":	null,
-			"onViewportChanged":	null,
-			"onSelectedRowsChanged":	null,
-			"onColumnsReordered":	null,
-		
-			// Methods
+			// SlickGrid Methods
 			"destroy":			destroy,
 			"getColumnIndex":	getColumnIndex,
 			"updateCell":		updateCell,
@@ -1118,18 +1102,8 @@
 		_grid: null,
 
 		_init: function() {
-			_grid = new SlickGrid(this);
+			_grid = new SlickGrid(this.element, this.options.rows, this.options.columns, this.options);
 		},
-
-		// Events: TODO !!
-		onColumnHeaderClick: null,
-		onClick: null,
-		onKeyDown: null,
-		onAddNewRow: null,
-		onValidationError: null,
-		onViewportChanged: null,
-		onSelectedRowsChanged: null,
-		onColumnsReordered: null,
 
 		// Methods
 		destroy: function() { _grid.destroy() },
@@ -1173,7 +1147,17 @@
 			enableCellNavigation: true,
 			defaultColumnWidth: 80,
 			enableColumnReorder: true,
-			asyncEditorLoading: true
+			asyncEditorLoading: true,
+			
+			// Event handlers:
+			onColumnHeaderClick: null,
+			onClick: null,
+			onKeyDown: null,
+			onAddNewRow: null,
+			onValidationError: null,
+			onViewportChanged: null,
+			onSelectedRowsChanged: null,
+			onColumnsReordered: null
 		}
 	});
 

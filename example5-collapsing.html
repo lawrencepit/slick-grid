@@ -109,7 +109,7 @@
 		};					
 			
 		var dataView;
-		var grid;
+		var $grid;
 		
 		var data = [];
 
@@ -219,13 +219,10 @@
 			dataView.endUpdate();
 			
 			options.rows = dataView.rows;
-			
-			// initialize the grid
-			grid = $("#myGrid").grid(options);
-			
-			grid.onAddNewRow = addItem;
-					
-			grid.onClick = function(e,row,cell) {
+
+			options.onAddNewRow = addItem;
+
+			options.onClick = function(e,row,cell) {
 				if ($(e.target).hasClass("toggle")) {
 					
 					var item = dataView.rows[row];
@@ -244,15 +241,17 @@
 				return false;
 			}
 			
+			// initialize the grid
+			$grid = $("#myGrid").grid(options);
 			
 			// wire up model events to drive the grid
 			dataView.onRowCountChanged.subscribe(function(args) {
-				grid.resizeCanvas();
+				$grid.grid('resizeCanvas');
 			});
 			
 			dataView.onRowsChanged.subscribe(function(rows) {
-				grid.removeRows(rows);
-				grid.render();
+				$grid.grid('removeRows', rows);
+				$grid.grid('render');
 			});
 			
 			
